@@ -1,4 +1,8 @@
-function login()
+/**
+ * 
+ */
+ 
+ function login()
 {
 
   var usuario = document.getElementById("txtUsuario").value;
