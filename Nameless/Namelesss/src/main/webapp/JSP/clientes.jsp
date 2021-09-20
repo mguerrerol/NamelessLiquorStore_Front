@@ -28,22 +28,22 @@
 				<br><br>
 				<center>
 		      <table border = "0">
-		        <tr><td><label>Cedula </label></td>
+		        <tr><td><label>C茅dula </label></td>
 							  <td><input type="number" name="txtCedula" id="txtCedula" maxlength="20" size ="50" placeholder="Digite la cedula" required checked></td>
 
-								<td><label>Tel閒ono </label></td>
-								<td><input type="number" name="txtTelefono" id="txtTelefono" maxlength="20" size ="50" placeholder="Digite el tel閒ono" required></td>
+								<td><label>Tel茅fono </label></td>
+								<td><input type="number" name="txtTelefono" id="txtTelefono" maxlength="20" size ="50" placeholder="Digite el tel茅fono" required></td>
 						</tr>
 						<tr>
 								<td><label>Nombre Completo </label></td>
 								<td><input type="text" name="txNnombre" id="txNnombre" maxlength="50" size ="50" placeholder="Digite el nombre completo" required></td>
 
-		            <td><label>Correo Electr髇ico </label></td>
-								<td><input type="email" name="txtCorreo" id="txtCorreo"  maxlength="50" size ="50" placeholder="Digite el correo electr髇ico" required></td>
+		            <td><label>Correo Electr贸nico </label></td>
+								<td><input type="email" name="txtCorreo" id="txtCorreo"  maxlength="50" size ="50" placeholder="Digite el correo electr贸nico" required></td>
 						</tr>
 		        <tr>
-							<td><label>Direcci髇 </label></td>
-							<td><input type="text" name="txtDireccion" id="txtDireccion" maxlength="50" size ="50" placeholder="Digite la direcci髇" required></td>
+							<td><label>Direcci贸n </label></td>
+							<td><input type="text" name="txtDireccion" id="txtDireccion" maxlength="50" size ="50" placeholder="Digite la direcci贸n" required></td>
 		        </tr>
 		    </table>
 				</center>
