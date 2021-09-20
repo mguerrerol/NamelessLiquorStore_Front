@@ -5,8 +5,8 @@
 	<head>
 		<meta charset="UTF-8">
 		<title>Nameless Liquor Store</title>
-		<link rel="stylesheet" type="text/css" href="CSS/estilo.css">
 		<link href="https://fonts.googleapis.com/css2?family=Anton&family=Ubuntu&display=swap" rel="stylesheet">
+		<link rel="stylesheet" type="text/css" href="CSS/estilo.css">
 	</head>
 	<body>
 		<header>
@@ -14,11 +14,11 @@
 		</header>
 		<ul class="menu">
 			<li><a href="usuarios.jsp">Usuarios</a></li>
-			<li><a href="clientes.html">Clientes</a></li>
-			<li><a href="proveedores.html">Proveedores</a></li>
-			<li><a href="productos.html">Productos</a></li>
-			<li><a href="ventas.html">Ventas</a></li>
-			<li><a href="reportes.html">Reportes</a></li>
+			<li><a href="clientes.jsp">Clientes</a></li>
+			<li><a href="proveedores.jsp">Proveedores</a></li>
+			<li><a href="productos.jsp">Productos</a></li>
+			<li><a href="ventas.jsp">Ventas</a></li>
+			<li><a href="reportes.jsp">Reportes</a></li>
 			<li><a href="index.jsp">Salir</a></li>
 		</ul>
 		<form class="formulario">
@@ -28,17 +28,17 @@
 			<center>
 		      <table border = "0">
 		        <tr><td><label>Cedula </label></td>
-							  <td><input type="text" maxlength="20" id="txtCedula" name="txtCedula" size ="50" placeholder="Digite la cedula"></td>
+							  <td><input type="text" maxlength="20" id="txtCedula" name="txtCedula" size ="50" placeholder="Digite la cedula" required></td>
 
 								<td><label>Usuario </label></td>
-								<td><input type="text" id="txtUsuario" name="txtUsuario" maxlength="50" size ="50" placeholder="Digite el usuario"></td>
+								<td><input type="text" id="txtUsuario" name="txtUsuario" maxlength="50" size ="50" placeholder="Digite el usuario" required></td>
 						</tr>
 						<tr>
 								<td><label>Nombre Completo </label></td>
-								<td><input type="text" id="txtNombre" name="txtNombre" maxlength="50" size ="50" placeholder="Digite el nombre"></td>
+								<td><input type="text" id="txtNombre" name="txtNombre" maxlength="50" size ="50" placeholder="Digite el nombre" required></td>
 
 		            <td><label>Contraseña </label></td>
-								<td><input type="password" id="txtPassword" name="txtPassword"  maxlength="50" size ="50"  placeholder="Digite la contraseña"></td>
+								<td><input type="password" id="txtPassword" name="txtPassword"  maxlength="50" size ="50"  placeholder="Digite la contraseña" required></td>
 						</tr>
 		        <tr>
 							<td><label>Correo Electrónico </label></td>
@@ -50,10 +50,10 @@
 		<br><br>
 		<br>
 			<center>
-		     <td><input type="submit" name="consultar" value="Consultar" class="button"></td>
-		     <td><input type="submit" name="crear" value="Crear" class="button"></td>
-		     <td><input type="submit" name="actualizar" value="Actualizar" class="button"></td>
-		     <td><input type="submit" name="borrar" value="Borrar" class="button"></td>
+		     <td><input type="submit" name="btnConsultar" id="btnConsultar" value="Consultar" class="button"></td>
+		     <td><input type="submit" name="btnCrear" id="btnCrear" value="Crear" class="button"></td>
+		     <td><input type="submit" name="btnActualizar" id="btnActualizar" value="Actualizar" class="button"></td>
+		     <td><input type="submit" name="btnBorrar" id="btnBorrar" value="Borrar" class="button"></td>
 			</center>
 		</div>
 		</form>
