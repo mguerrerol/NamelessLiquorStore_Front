@@ -31,15 +31,7 @@ public class ClientesServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		//response.getWriter().append("Served at: ").append(request.getContextPath());
-		/*
-		long cedula_clientes = Long.parseLong(request.getParameter("txtCedula"));
-		String telefono_clientes = request.getParameter("txtTelefono");
-		String nombre_clientes = request.getParameter("txtNombre");
-		String email_clientes = request.getParameter("txtCorreo");
-		String direccion_clientes = request.getParameter("txtDireccion");
-		*/
-		
+				
 		String btnConsultar = request.getParameter("btnConsultar");	
 		String btnCrear = request.getParameter("btnCrear");	
 		String btnActualizar = request.getParameter("btnActualizar");	
@@ -57,12 +49,12 @@ public class ClientesServlet extends HttpServlet {
 		
 		if(btnActualizar != null)
 		{
-			
+			actualizarUsuario(request,response);
 		}
 		
 		if(btnBorrar != null)
 		{
-			
+			eliminarCliente(request,response);
 		}
 		
 	}
@@ -81,7 +73,7 @@ public class ClientesServlet extends HttpServlet {
 			PrintWriter writer = response.getWriter();
 			if (respuesta == 200)
 			{
-				request.getRequestDispatcher("/clientes.jsp").forward(request, response);
+				request.getRequestDispatcher("/clientescrear.jsp").forward(request, response);
 			}
 			else 
 			{
@@ -93,22 +85,85 @@ public class ClientesServlet extends HttpServlet {
 		}
 	}
 	
+	public void eliminarCliente(HttpServletRequest request, HttpServletResponse response) {
+		Long id= Long.parseLong(request.getParameter("txtCedula"));			
+		int respuesta=0;
+		try {
+		   respuesta = ClientesJSON.deleteJSON(id);
+		   PrintWriter write = response.getWriter();
+		   if (respuesta==200) {
+			   request.getRequestDispatcher("/clienteseliminar.jsp").forward(request, response);
+		   } else {
+			write.println("Error: " +  respuesta);
+		   }
+		      write.close();
+		   } catch (Exception e) {
+			e.printStackTrace();
+		   }	
+		}
+		
+		public void actualizarUsuario(HttpServletRequest request, HttpServletResponse response) {
+			
+			Clientes cliente = new Clientes();
+			cliente.setNombre_clientes(request.getParameter("txtNombre"));
+			cliente.setCedula_clientes(Long.parseLong(request.getParameter("txtCedula")));
+			cliente.setEmail_clientes(request.getParameter("txtCorreo"));
+			cliente.setTelefono_clientes(request.getParameter("txtTelefono"));
+			cliente.setDireccion_clientes(request.getParameter("txtDireccion"));
+			int respuesta = 0;
+			
+			try {
+				respuesta = ClientesJSON.putJSON(cliente,cliente.getCedula_clientes());
+				PrintWriter write = response.getWriter();
+					
+				if (respuesta==200) {
+					request.getRequestDispatcher("/clientesactualizar.jsp").forward(request, response);
+				} else {
+					write.println("Error: " +  respuesta);
+				}
+				write.close();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+		}
+	
 	public void listarClientes(HttpServletRequest request, HttpServletResponse response) {
 		try {
+			long txtCedula = Long.parseLong(request.getParameter("txtCedula"));
+			String txtNombre = request.getParameter("txtNombre");
+			String txtTelefono = request.getParameter("txtTelefono");
+			String txtCorreo = request.getParameter("txtCorreo");
+			String txtDireccion = request.getParameter("txtDireccion");
+			int error = 0;
 			ArrayList<Clientes> lista = ClientesJSON.getJSON();
-			String pagina = "/listadoclientes.jsp";
-			request.setAttribute("lista",lista);
+			String pagina = "/clientesconsulta.jsp";
+			
+			for (Clientes cliente:lista){
+				if (cliente.getCedula_clientes() == txtCedula)
+				{
+					txtCedula = cliente.getCedula_clientes();
+					txtNombre = cliente.getNombre_clientes();
+					txtCorreo = cliente.getEmail_clientes();
+					txtTelefono = cliente.getTelefono_clientes();
+					txtDireccion = cliente.getDireccion_clientes();
+					error = 1;
+					break;
+				}
+			}
+			
+			request.setAttribute("txtCedula",txtCedula);
+			request.setAttribute("txtNombre",txtNombre);
+			request.setAttribute("txtCorreo",txtCorreo);
+			request.setAttribute("txtTelefono",txtTelefono);
+			request.setAttribute("txtDireccion",txtDireccion);
+			request.setAttribute("error",error);
+		
 			RequestDispatcher dispatcher = getServletContext().getRequestDispatcher(pagina);
 			dispatcher.forward(request, response);
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
 	}
-	
-	
-	
-	
-	
 
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)

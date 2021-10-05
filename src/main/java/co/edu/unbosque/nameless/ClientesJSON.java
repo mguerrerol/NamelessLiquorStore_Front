@@ -34,8 +34,8 @@ public class ClientesJSON {
 			Clientes cliente = new Clientes();
 			cliente.setCedula_clientes(Long.parseLong(innerObj.get("cedula_clientes").toString()));
 			cliente.setEmail_clientes(innerObj.get("email_clientes").toString());
-			cliente.setNombre_clientes(innerObj.get("nombre_cliente").toString());
-			cliente.setTelefono_clientes(innerObj.get("telefono_cliente").toString());
+			cliente.setNombre_clientes(innerObj.get("nombre_clientes").toString());
+			cliente.setTelefono_clientes(innerObj.get("telefono_clientes").toString());
 			cliente.setDireccion_clientes(innerObj.get("direccion_clientes").toString());
 			lista.add(cliente);
 		}
@@ -96,6 +96,62 @@ public class ClientesJSON {
 		return respuesta;
 	}
 	
+	public static int putJSON(Clientes cliente, Long id) throws IOException {
+		
+		url = new URL(sitio+"clientes/actualizar");
+		String authStr = Base64.getEncoder().encodeToString("usuario:tiendagenerica".getBytes());
+		HttpURLConnection http;
+		http = (HttpURLConnection)url.openConnection();
+		
+		try {
+		  http.setRequestMethod("PUT");
+		} catch (ProtocolException e) {
+		  e.printStackTrace();
+		}
+		
+		http.setDoOutput(true);
+		http.setRequestProperty("Accept", "application/json");
+		http.setRequestProperty("Autorization", "Basic" + authStr);
+		http.setRequestProperty("Content-Type", "application/json");
+		
+		String data = "{"
+				+ "\"cedula_clientes\":\""+ cliente.getCedula_clientes()
+				+"\",\"email_clientes\": \""+cliente.getEmail_clientes()
+				+"\",\"nombre_clientes\": \""+cliente.getNombre_clientes()
+				+"\",\"telefono_clientes\":\""+cliente.getTelefono_clientes()
+				+"\",\"direccion_clientes\":\""+cliente.getDireccion_clientes()
+				+ "\"}";
+		byte[] out = data.getBytes(StandardCharsets.UTF_8);
+		OutputStream stream = http.getOutputStream();
+		stream.write(out);
+		
+		int respuesta = http.getResponseCode();
+		http.disconnect();
+		return respuesta;
+	}
+
+
+	public static int deleteJSON(Long id) throws IOException {
+	
+		url = new URL(sitio+"clientes/eliminar/" + id);
+		String authStr = Base64.getEncoder().encodeToString("usuario:tiendagenerica".getBytes());
+		HttpURLConnection http;
+		http = (HttpURLConnection)url.openConnection();
+	
+		try {
+			http.setRequestMethod("DELETE");
+		} catch (ProtocolException e) {
+			e.printStackTrace();
+		}
+	
+		http.setDoOutput(true);
+		http.setRequestProperty("Accept", "application/json");
+		http.setRequestProperty("Autorization", "Basic" + authStr);
+		http.setRequestProperty("Content-Type", "application/json");
+	
+		int respuesta = http.getResponseCode();
+		http.disconnect();
+		return respuesta;
+	}
+	
 }
-
-
