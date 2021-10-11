@@ -32,14 +32,7 @@ public class ProveedoresServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		response.getWriter().append("Served at: ").append(request.getContextPath());
-		
-		/*long nitproveedor_proveedores = Long.parseLong(request.getParameter("txtNit"));
-		String telefono_proveedores = request.getParameter("txtTelefono");
-		String nombre_proveedores = request.getParameter("txtNombre");
-		String ciudad_proveedores = request.getParameter("txtCiudad");
-		String direccion_proveedores = request.getParameter("txtDireccion");
-		*/
-		
+				
 		String btnConsultar = request.getParameter("btnConsultar");	
 		String btnCrear = request.getParameter("btnCrear");	
 		String btnActualizar = request.getParameter("btnActualizar");	
@@ -69,72 +62,181 @@ public class ProveedoresServlet extends HttpServlet {
 	
 	
 	public void crearProveedores(HttpServletRequest request, HttpServletResponse response) {
-		Proveedores proveedor = new Proveedores();
-		proveedor.setNombre_proveedores(request.getParameter("txtNombre"));
-		proveedor.setNitproveedor_proveedores(Long.parseLong(request.getParameter("txtNit")));
-		proveedor.setTelefono_proveedores(request.getParameter("txtTelefono"));
-		proveedor.setDireccion_proveedores(request.getParameter("txtDireccion"));
-		proveedor.setCiudad_proveedores(request.getParameter("txtCiudad"));
-		int respuesta = 0;
 		
-		try {
-			respuesta = ProveedoresJSON.postJSON(proveedor);
-			PrintWriter writer = response.getWriter();
-			if (respuesta == 200)
-			{
-				request.getRequestDispatcher("/proveedorescrear.jsp").forward(request, response);
+		long txtNit = Long.parseLong(request.getParameter("txtNit"));
+		String txtNombre = request.getParameter("txtNombre");
+		String txtTelefono = request.getParameter("txtTelefono");
+		String txtDireccion = request.getParameter("txtDireccion");
+		String txtCiudad = request.getParameter("txtCiudad");
+		
+		if (txtNombre != "" && txtDireccion != "" && txtTelefono != "" && txtCiudad != "")
+		{
+		
+			Proveedores proveedor = new Proveedores();
+			proveedor.setNitproveedor_proveedores(txtNit);
+			proveedor.setNombre_proveedores(txtNombre);
+			proveedor.setTelefono_proveedores(txtTelefono);
+			proveedor.setDireccion_proveedores(txtDireccion);
+			proveedor.setCiudad_proveedores(txtCiudad);
+			int respuesta = 0;
+			int verificador = 0;
+		
+			try {
+				ArrayList<Proveedores> lista = ProveedoresJSON.getJSON();
+				for(Proveedores proveedorverificar : lista) {
+					if(proveedorverificar.getNitproveedor_proveedores() == txtNit) {
+						verificador = 1;
+						break;
+					}
+				}
+				
+				if(verificador == 0) 
+				{
+					respuesta = ProveedoresJSON.postJSON(proveedor);
+					PrintWriter writer = response.getWriter();
+					if (respuesta == 200)
+					{
+						request.getRequestDispatcher("/proveedorescrear.jsp").forward(request, response);
+					}
+					else 
+					{
+						writer.println("Error: " + respuesta);
+					}
+					writer.close();
+				}
+				else 
+				{
+					request.getRequestDispatcher("/proveedoreserrorcrear.jsp").forward(request, response);
+				}
+			}catch(IOException | ServletException e){
+				e.printStackTrace();
+			}catch(Exception e){
+				e.printStackTrace();
 			}
-			else 
-			{
-				writer.println("Error: " + respuesta);
-			}
-			writer.close();
-		}catch(IOException | ServletException e){
-			e.printStackTrace();
+		}
+		else
+		{
+			try {
+				request.getRequestDispatcher("/proveedoreserrorcampos.jsp").forward(request, response);
+			}catch(IOException | ServletException e){
+				e.printStackTrace();
+			}		
 		}
 	}
 	
 	public void eliminarProveedor(HttpServletRequest request, HttpServletResponse response) {
 		Long id= Long.parseLong(request.getParameter("txtNit"));			
 		int respuesta=0;
+		int verificadorproveedores = 0;
+		int verificadorproductos = 0;
+		
 		try {
-		   respuesta = ProveedoresJSON.deleteJSON(id);
-		   PrintWriter write = response.getWriter();
-		   if (respuesta==200) {
-			   request.getRequestDispatcher("/proveedoreseliminar.jsp").forward(request, response);
-		   } else {
-			write.println("Error: " +  respuesta);
-		   }
-		      write.close();
-		   } catch (Exception e) {
+			ArrayList<Proveedores> listaproveedores = ProveedoresJSON.getJSON();
+			for(Proveedores proveedorverificar : listaproveedores) {
+				if(proveedorverificar.getNitproveedor_proveedores() == id) {
+					verificadorproveedores = 1;
+					break;
+				}
+			}
+			
+			ArrayList<Productos> listaproductos = ProductosJSON.getJSON();
+			for(Productos productoverificar:listaproductos) {
+				if(productoverificar.getNitproveedor_proveedores() == id) {
+					verificadorproductos = 1;
+					break;
+				}
+			}
+			
+			if( verificadorproveedores == 0) 
+			{	
+				request.getRequestDispatcher("/proveedoreserroreliminarnoexiste.jsp").forward(request, response);	
+			}
+			
+			if(verificadorproductos == 0) 
+			{			
+			   respuesta = ProveedoresJSON.deleteJSON(id);
+			   PrintWriter write = response.getWriter();
+			   if (respuesta==200) 
+			   {
+				   request.getRequestDispatcher("/proveedoreseliminar.jsp").forward(request, response);
+			   }
+			   else
+			   {
+				   write.println("Error: " +  respuesta);
+			   }
+			   write.close();
+			}	
+			else 
+			{
+				request.getRequestDispatcher("/proveedoreserroreliminarllaveforanea.jsp").forward(request, response);	
+			} 
+		}catch (Exception e) {
 			e.printStackTrace();
-		   }	
-		}
+		}	
+	}
 		
 	public void actualizarProveedor(HttpServletRequest request, HttpServletResponse response) {
 			
-		Proveedores proveedor = new Proveedores();
-		proveedor.setNombre_proveedores(request.getParameter("txtNombre"));
-		proveedor.setNitproveedor_proveedores(Long.parseLong(request.getParameter("txtNit")));
-		proveedor.setTelefono_proveedores(request.getParameter("txtTelefono"));
-		proveedor.setDireccion_proveedores(request.getParameter("txtDireccion"));
-		proveedor.setCiudad_proveedores(request.getParameter("txtCiudad"));
-		int respuesta = 0;
+		long txtNit = Long.parseLong(request.getParameter("txtNit"));
+		String txtNombre = request.getParameter("txtNombre");
+		String txtTelefono = request.getParameter("txtTelefono");
+		String txtDireccion = request.getParameter("txtDireccion");
+		String txtCiudad = request.getParameter("txtCiudad");
+		
+		
+		if (txtNombre != "" && txtDireccion != "" && txtTelefono != "" && txtCiudad != "")
+		{
+		
+			Proveedores proveedor = new Proveedores();
+			proveedor.setNitproveedor_proveedores(txtNit);
+			proveedor.setNombre_proveedores(txtNombre);
+			proveedor.setTelefono_proveedores(txtTelefono);
+			proveedor.setDireccion_proveedores(txtDireccion);
+			proveedor.setCiudad_proveedores(txtCiudad);
+			int respuesta = 0;
+			int verificador = 0;
 			
-		try {
-			respuesta = ProveedoresJSON.putJSON(proveedor,proveedor.getNitproveedor_proveedores());
-			PrintWriter write = response.getWriter();
-					
-			if (respuesta==200) {
-				request.getRequestDispatcher("/proveedoresactualizar.jsp").forward(request, response);
-			} else {
-				write.println("Error: " +  respuesta);
-			}
-			write.close();
-			} catch (Exception e) {
+			try {
+				ArrayList<Proveedores> lista = ProveedoresJSON.getJSON();
+				for(Proveedores proveedorverificar : lista) {
+					if(proveedorverificar.getNitproveedor_proveedores() == txtNit) {
+						verificador = 1;
+						break;
+					}
+				}
+				if(verificador == 1) 
+				{
+					respuesta = ProveedoresJSON.putJSON(proveedor,proveedor.getNitproveedor_proveedores());
+					PrintWriter write = response.getWriter();
+					if (respuesta==200) 
+					{
+						request.getRequestDispatcher("/proveedoresactualizar.jsp").forward(request, response);
+					}
+					else
+					{
+						write.println("Error: " +  respuesta);
+					}
+					write.close();
+				}
+				else
+				{
+					request.getRequestDispatcher("/proveedoreserroractualizar.jsp").forward(request, response);
+				}		
+			}catch(IOException | ServletException e){
+				e.printStackTrace();
+			}catch(Exception e){
 				e.printStackTrace();
 			}
 		}
+		else
+		{
+			try {
+				request.getRequestDispatcher("/proveedoreserrorcampos.jsp").forward(request, response);
+			}catch(IOException | ServletException e){
+				e.printStackTrace();
+			}	
+		}
+	}
 	
 	public void listarProveedores(HttpServletRequest request, HttpServletResponse response) {
 		try {

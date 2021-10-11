@@ -23,7 +23,7 @@
 		<li><a href="reportes.jsp">Reportes</a></li>
 		<li><a href="index.jsp">Salir</a></li>
 	</ul>
-	<form class="formulario" method="post" action="./ProductosServlet"
+	<form class="formulario" method="get" action="./ProductosServlet"
 		enctype="multipart/form-data">
 		<div>
 			<br>
@@ -35,7 +35,7 @@
 				<label for="file-upload" class="subir">
     				<i class="fas fa-cloud-upload-alt"></i> Seleccionar archivo
 				</label>
-			<input id="file-upload" onchange='cambiar()' type="file" style='display: none;' name="archivoCSV" accept=".csv, .CSV"/>
+			<input id="file-upload" onchange='cambiar()' type="file" style='display: none;' name="file-upload accept=".csv, .CSV"/>
 			<br>
 			<div id="info" class="info"></div>        
 			</center>

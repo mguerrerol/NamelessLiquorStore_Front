@@ -33,7 +33,7 @@
 						<label>Cedula</label>
 					</td>
 					<td>
-						<input type="text" maxlength="20" name="txtCedula" id="txtCedula" size="10" placeholder="Digite la cedula" required>
+						<input type="number" maxlength="20" name="txtCedula" id="txtCedula" size="10" placeholder="Digite la cedula" required>
 					</td>
 					<td>
 						<input type="submit" name="btnConsultarCliente" id="btnConsultarCliente" value="Consultar" class="button">
@@ -129,32 +129,6 @@
 			</table>
 			<br>
 			</center>
-			<table class="tablaventas3">
-				<tr>
-					<td>
-						<label>Total Venta </label>
-					</td>
-					<td>
-						<input type="number" name="txtTotalVenta" id="txtTotalVenta" maxlength="20" size="10" disabled>
-					</td>
-				</tr>
-				<tr>
-					<td>
-						<label>Total IVA </label>
-					</td>
-					<td>
-						<input type="number" name="txtTotalIva" id="txtTotalIva" maxlength="20" size="10" disabled>
-					</td>
-				</tr>
-				<tr>
-					<td>
-						<label>Total con IVA </label>
-					</td>
-					<td>
-						<input type="number" name="txtTotalConIva" id="txtTotalConIva" maxlength="20" size="10" disabled>
-					</td>
-				</tr>
-			</table>
 			<br>
 		</div>
 	</form>

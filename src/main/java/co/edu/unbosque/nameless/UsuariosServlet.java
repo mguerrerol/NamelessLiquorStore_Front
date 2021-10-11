@@ -33,8 +33,6 @@ public class UsuariosServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		
-		
-		
 		String btnConsultar = request.getParameter("btnConsultar");	
 		String btnCrear = request.getParameter("btnCrear");	
 		String btnActualizar = request.getParameter("btnActualizar");	
@@ -64,71 +62,184 @@ public class UsuariosServlet extends HttpServlet {
 	}
 	
 	public void crearUsuario(HttpServletRequest request, HttpServletResponse response) {
-		Usuarios usuario = new Usuarios();
-		usuario.setNombre_usuarios(request.getParameter("txtNombre"));
-		usuario.setCedula_usuarios(Long.parseLong(request.getParameter("txtCedula")));
-		usuario.setEmail_usuarios(request.getParameter("txtCorreo"));
-		usuario.setUsuario_usuarios(request.getParameter("txtUsuario"));
-		usuario.setPassword_usuarios(request.getParameter("txtPassword"));
-		int respuesta = 0;
 		
-		try {
-			respuesta = UsuariosJSON.postJSON(usuario);
-			PrintWriter writer = response.getWriter();
-			if (respuesta == 200)
-			{
-				request.getRequestDispatcher("/usuarioscrear.jsp").forward(request, response);
+		long txtCedula = Long.parseLong(request.getParameter("txtCedula")); 
+		String txtNombre = request.getParameter("txtNombre");
+		String txtCorreo = request.getParameter("txtCorreo");
+		String txtUsuario = request.getParameter("txtUsuario");
+		String txtPassword = request.getParameter("txtPassword");
+		
+		if (txtNombre != "" && txtCorreo != "" && txtUsuario != "" && txtPassword != "")
+		{
+			Usuarios usuario = new Usuarios();
+			usuario.setCedula_usuarios(txtCedula);
+			usuario.setNombre_usuarios(txtNombre);
+			usuario.setEmail_usuarios(txtCorreo);
+			usuario.setUsuario_usuarios(txtUsuario);
+			usuario.setPassword_usuarios(txtPassword);
+			int respuesta = 0;
+			int verificador = 0;
+			
+			try {
+				ArrayList<Usuarios> lista = UsuariosJSON.getJSON();
+				for(Usuarios usuarioverificar : lista) {
+					if(usuarioverificar.getCedula_usuarios() == txtCedula) {
+						verificador = 1;
+						break;
+					}
+				}
+				
+				if(verificador == 0) 
+				{
+					respuesta = UsuariosJSON.postJSON(usuario);
+					PrintWriter writer = response.getWriter();
+					if (respuesta == 200)
+					{
+						request.getRequestDispatcher("/usuarioscrear.jsp").forward(request, response);
+					}
+					else 
+					{
+						writer.println("Error: " +  respuesta);
+					}
+					writer.close();
+				}
+				else 
+				{
+					request.getRequestDispatcher("/usuarioserrorcrear.jsp").forward(request, response);
+				}
+				
+			}catch(IOException | ServletException e){
+				e.printStackTrace();
+			}catch(Exception e){
+				e.printStackTrace();
 			}
-			else 
-			{
-				writer.println("Error: " +  respuesta);
+		}
+		else
+		{
+			try {
+				request.getRequestDispatcher("/usuarioserrorcampos.jsp").forward(request, response);
+			}catch(IOException | ServletException e){
+				e.printStackTrace();
 			}
-			writer.close();
-		}catch(IOException | ServletException e){
-			e.printStackTrace();
 		}
 	}
 	
 	public void eliminarUsuario(HttpServletRequest request, HttpServletResponse response) {
 		Long id= Long.parseLong(request.getParameter("txtCedula"));			
 		int respuesta=0;
+		int verificadorusuario = 0;
+		int  verificadorventas = 0;
+		
 		try {
-			respuesta = UsuariosJSON.deleteJSON(id);
-			PrintWriter write = response.getWriter();
-			if (respuesta==200) {
-				request.getRequestDispatcher("/usuarioseliminar.jsp").forward(request, response);
-				} else {
-				write.println("Error: " +  respuesta);
+			ArrayList<Usuarios> listausuarios = UsuariosJSON.getJSON();
+			for(Usuarios usuarioverificar:listausuarios) {
+				if(usuarioverificar.getCedula_usuarios() == id) {
+					verificadorusuario = 1;
+					break;
 				}
-			write.close();
-		} catch (Exception e) {
+			}
+			ArrayList<Ventas> listaventas = VentasJSON.getJSON();
+			for(Ventas ventasverificar:listaventas) {
+				if(ventasverificar.getCedula_usuarios() == id) {
+					verificadorventas = 1;
+					break;
+				}
+			}
+			
+			if(verificadorusuario == 0) 
+			{	
+				request.getRequestDispatcher("/usuarioserroreliminarnoexiste.jsp").forward(request, response);	
+			}
+			
+			if(verificadorventas == 0) 
+			{		
+				respuesta = UsuariosJSON.deleteJSON(id);
+				PrintWriter write = response.getWriter();
+				if (respuesta==200) 
+				{
+					request.getRequestDispatcher("/usuarioseliminar.jsp").forward(request, response);
+				}
+				else 
+				{
+					write.println("Error: " +  respuesta);
+				}
+				write.close();
+			}
+			else 
+			{
+				request.getRequestDispatcher("/usuarioserroreliminarllaveforanea.jsp").forward(request, response);	
+			} 
+		
+		
+		
+		
+		
+		
+		
+		}catch (Exception e) {
 			e.printStackTrace();
-		}	
+		}
+		
 	}
 	
 	public void actualizarUsuario(HttpServletRequest request, HttpServletResponse response) {
 		
-		Usuarios usuario = new Usuarios();
-		usuario.setNombre_usuarios(request.getParameter("txtNombre"));
-		usuario.setCedula_usuarios(Long.parseLong(request.getParameter("txtCedula")));
-		usuario.setEmail_usuarios(request.getParameter("txtCorreo"));
-		usuario.setUsuario_usuarios(request.getParameter("txtUsuario"));
-		usuario.setPassword_usuarios(request.getParameter("txtPassword"));
-
-		int respuesta=0;
-		try {
-			respuesta = UsuariosJSON.putJSON(usuario,usuario.getCedula_usuarios());
-			PrintWriter writer = response.getWriter();
-				
-			if (respuesta==200) {
-				request.getRequestDispatcher("/usuariosactualizar.jsp").forward(request, response);
-			} else {
-				writer.println("Error: " +  respuesta);
-			}
-			writer.close();
-			} catch (Exception e) {
+		long txtCedula = Long.parseLong(request.getParameter("txtCedula")); 
+		String txtNombre = request.getParameter("txtNombre");
+		String txtCorreo = request.getParameter("txtCorreo");
+		String txtUsuario = request.getParameter("txtUsuario");
+		String txtPassword = request.getParameter("txtPassword");
+		
+		if (txtNombre != "" && txtCorreo != "" && txtUsuario != "" && txtPassword != "")
+		{
+			Usuarios usuario = new Usuarios();
+			usuario.setCedula_usuarios(txtCedula);
+			usuario.setNombre_usuarios(txtNombre);
+			usuario.setEmail_usuarios(txtCorreo);
+			usuario.setUsuario_usuarios(txtUsuario);
+			usuario.setPassword_usuarios(txtPassword);
+			int respuesta=0;
+			int verificador = 0;
+		
+			try {
+				ArrayList<Usuarios> lista = UsuariosJSON.getJSON();
+				for(Usuarios usuarioverificar:lista) {
+					if(usuarioverificar.getCedula_usuarios() == txtCedula) {
+						verificador = 1;
+						break;
+					}
+				}
+				if(verificador == 1) 
+				{		
+					respuesta = UsuariosJSON.putJSON(usuario,usuario.getCedula_usuarios());
+					PrintWriter writer = response.getWriter();
+					if (respuesta==200) {
+						request.getRequestDispatcher("/usuariosactualizar.jsp").forward(request, response);
+					} 
+					else 
+					{
+						writer.println("Error: " +  respuesta);
+					}
+					writer.close();
+				}
+				else	
+				{
+					request.getRequestDispatcher("/usuarioserroractualizar.jsp").forward(request, response);
+				}
+		}catch(IOException | ServletException e){
+			e.printStackTrace();
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+	else
+	{
+			try {
+				request.getRequestDispatcher("/usuarioserrorcampos.jsp").forward(request, response);
+			}catch(IOException | ServletException e){
 				e.printStackTrace();
 			}
+		}
 	}
 
 	
