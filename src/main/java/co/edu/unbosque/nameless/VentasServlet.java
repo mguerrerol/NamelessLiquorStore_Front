@@ -292,7 +292,6 @@ public class VentasServlet extends HttpServlet {
 		String txtCliente = "";
 		long txtConsecutivo = 0;
 		
-		
 		long txtCodProd1 = Long.parseLong(request.getParameter("txtCodProd1"));
 		String txtNomProd1 = request.getParameter("txtNomProd1");
 		double txtValProd1 = 0;
@@ -414,16 +413,13 @@ public class VentasServlet extends HttpServlet {
 		} 
 			
 			
-		if(txtTotalVenta > 0.0) 
+		if(txtTotalVenta == 0.0) 
 		{
-			if(txtCantidad1 >= 0.0 && txtCantidad2 >= 0.0 && txtCantidad3 >= 0.0) 
-			{
-				respuestaVentas = VentasJSON.postJSON(venta);
-			}
-			else 
-			{
-				request.getRequestDispatcher("/ventaserrorventanula.jsp").forward(request, response);
-			}
+			request.getRequestDispatcher("/ventaserrorventanula.jsp").forward(request, response);	
+		}
+		else 
+		{
+			respuestaVentas = VentasJSON.postJSON(venta);
 		}
 		
 		if(txtCantidad1 > 0.0) 
@@ -525,7 +521,7 @@ public class VentasServlet extends HttpServlet {
 		}
 		else 
 		{
-			request.getRequestDispatcher("/ventaserrorventanula.jsp").forward(request, response);
+			writer.println("Error: " + respuestaVentas);
 		}
 		writer.close();	
 	}catch(IOException | ServletException e){
